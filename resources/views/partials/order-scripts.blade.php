@@ -85,14 +85,17 @@ $(document).ready(function() {
                 
                 Swal.fire({
                     icon: 'success',
-                    title: 'تم تسجيل طلبك بنجاح!',
-                    text: 'سيتم توجيهك للواتساب الآن لإتمام الطلب.',
-                    confirmButtonText: 'تمام',
-                    timer: 2000
-                }).then(() => {
-                    window.open(waUrl, '_blank');
-                    location.reload();
+                    title: 'تم تسجيل طلبك بنجاح! 🎉',
+                    text: 'اضغط تمام عشان نبعت طلبك على الواتساب دلوقتي.',
+                    confirmButtonText: 'تمام، ابعتني للواتساب',
+                    confirmButtonColor: '#25D366', // لون أخضر واتساب
+                    timer: 4000,
+                    timerProgressBar: true,
+                }).then((result) => {
+                    // التوجيه للواتساب بعد الضغط على الزرار أو انتهاء الوقت
+                    window.location.href = waUrl;
                 });
+
             },
             error: function(xhr) {
                 btn.prop('disabled', false).html(originalText);

@@ -153,15 +153,16 @@
       <label for="areaSelect">المنطقة *</label>
       <select id="areaSelect">
         <option value="">— اختر منطقتك —</option>
-        <option value="حي الجامعة" data-delivery="10">حي الجامعة (توصيل 10 جنيه)</option>
-        <option value="جيهان" data-delivery="10">جيهان (توصيل 10 جنيه)</option>
-        <option value="أحمد ماهر" data-delivery="10">أحمد ماهر (توصيل 10 جنيه)</option>
-        <option value="المشاية السفلية" data-delivery="10">المشاية السفلية (توصيل 10 جنيه)</option>
-        <option value="توريل" data-delivery="10">توريل (توصيل 10 جنيه)</option>
+        <option value="حي الجامعة" data-delivery="30">حي الجامعة</option>
+        <option value="جيهان" data-delivery="30">جيهان</option>
+        <option value="أحمد ماهر" data-delivery="30">أحمد ماهر</option>
+        <option value="المشاية السفلية" data-delivery="30">المشاية السفلية</option>
+        <option value="توريل" data-delivery="30">توريل</option>
         <option value="outside">خارج المنصورة</option>
       </select>
       <div class="error-msg" id="areaErr">اختر منطقة من القائمة</div>
     </div>
+
 
 
     <!-- Outside area note -->

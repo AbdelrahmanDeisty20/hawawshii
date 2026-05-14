@@ -1,31 +1,24 @@
-// ===== APP DATA (Static for now, can be fetched from API later) =====
+// ===== APP DATA =====
 const DEFAULT_SETTINGS = {
   productName: 'لقمة حواوشي',
-  unitPrice: 55,
-  discountedPrice: 45,
-  discountQtyThreshold: 5,
-  whatsappNumber: '201064059604',
+  unitPrice: 30,
+  discountedPrice: 30,
+  discountQtyThreshold: 999, // تعطيل الخصم
+  whatsappNumber: '201010455010',
   areas: [
-    { name: 'وسط المنصورة', delivery: 10, active: true },
-    { name: 'ميت خميس', delivery: 12, active: true },
-    { name: 'طلخا', delivery: 15, active: true },
-    { name: 'شبرا بخوم', delivery: 15, active: true },
-    { name: 'السنبلاوين', delivery: 20, active: true },
-    { name: 'ديرب نجم', delivery: 20, active: true },
-    { name: 'المطرية', delivery: 25, active: true },
+    { name: 'حي الجامعة', active: true },
+    { name: 'جيهان', active: true },
+    { name: 'أحمد ماهر', active: true },
+    { name: 'المشاية السفلية', active: true },
+    { name: 'توريل', active: true },
   ],
   reviews: [
-    { name: 'أحمد سامي', location: 'وسط المنصورة', rating: 5, text: 'والله جربته في رمضان وأبهرني! الطعم زي اللي بنشتريه من المحل بالظبط، بس أسهل بكتير. هطلبه دايمًا 🔥' },
-    { name: 'سارة محمود', location: 'طلخا', rating: 5, text: 'عملته في الفرن والأولاد اتجننوا بيه. اللحمة طازجة جدًا والتوابل تحفة! التوصيل كان سريع جدًا.' },
-    { name: 'محمد الشاذلي', location: 'ميت خميس', rating: 5, text: 'أفضل حواوشي جاهز جربته. مناسب جدًا للسحور في رمضان، 10 دقايق وجاهز. عامل طلبية تانية دلوقتي 😄' },
-    { name: 'هدى عبد الرحمن', location: 'المنصورة', rating: 4, text: 'منتج ممتاز والتغليف محترم. نصيحتي اعمليه على الشواية أحسن من الفرن، الطعم يبقى خرافي!' },
+    { name: 'أحمد سامي', location: 'حي الجامعة', rating: 5, text: 'والله جربته في رمضان وأبهرني! الطعم زي اللي بنشتريه من المحل بالظبط، بس أسهل بكتير. هطلبه دايمًا 🔥' },
+    { name: 'سارة محمود', location: 'أحمد ماهر', rating: 5, text: 'عملته في الفرن والأولاد اتجننوا بيه. اللحمة طازجة جدًا والتوابل تحفة! التوصيل كان سريع جدًا.' },
   ],
   faqs: [
     { q: 'هل المنتج مجمد؟', a: 'المنتج يُحفظ في الثلاجة أو الفريزر. يُنصح بتسخينه مباشرة من الثلاجة لأفضل طعم.' },
-    { q: 'كام مدة التسوية في الفرن؟', a: 'في الفرن من 12 إلى 15 دقيقة على 180°. في الطاسة من 6 إلى 8 دقايق. في الشواية حسب الحرارة من 8 إلى 12 دقيقة.' },
-    { q: 'ينفع يتعمل في الطاسة؟', a: 'أيوه بالطبع! الطاسة من أسهل الطرق — دهّن الطاسة بشوية زيت وسخّن على نار متوسطة.' },
     { q: 'اللحمة بلدي فعلًا؟', a: 'نعم 100%! نستخدم لحمة بلدي طازجة من مصادر موثوقة بدون أي إضافات صناعية.' },
-    { q: 'إيه أنواع العروض المتاحة؟', a: 'عند طلب 5 قطع أو أكثر بتستمتع بسعر مخفض خاص. تابعونا على واتساب لمعرفة أحدث العروض!' },
   ],
 };
 
@@ -47,35 +40,36 @@ function populateAreas() {
   S.areas.filter(a => a.active).forEach(area => {
     const opt = document.createElement('option');
     opt.value = area.name;
-    opt.dataset.delivery = area.delivery;
-    opt.textContent = `${area.name} (توصيل ${area.delivery} جنيه)`;
+    opt.textContent = area.name;
     group.appendChild(opt);
   });
 }
 
 // ===== PRICE CALC =====
 function getUnitPrice() {
-  return qty >= S.discountQtyThreshold ? S.discountedPrice : S.unitPrice;
+  return S.unitPrice;
 }
-function getDelivery() {
-  const sel = document.getElementById('areaSelect');
-  const opt = sel.options[sel.selectedIndex];
-  if (!opt || !opt.dataset.delivery) return 0;
-  return parseInt(opt.dataset.delivery) || 0;
-}
+
 function updatePrices() {
   if(!document.getElementById('unitPrice')) return;
   const up = getUnitPrice();
-  const del = getDelivery();
   const sub = up * qty;
-  const tot = sub + del;
+  const tot = sub; 
+  
+  // تحديث القيم في الواجهة (حتى لو كانت مخفية لضمان الحساب الصحيح)
   document.getElementById('unitPrice').textContent = up + ' جنيه';
   document.getElementById('pqty').textContent = qty;
   document.getElementById('subtotal').textContent = sub + ' جنيه';
-  document.getElementById('deliveryFee').textContent = del > 0 ? del + ' جنيه' : '—';
-  document.getElementById('total').textContent = del > 0 ? tot + ' جنيه' : sub + ' جنيه + التوصيل';
-  document.getElementById('offerBadge').classList.toggle('show', qty >= S.discountQtyThreshold);
+  
+  const deliveryRow = document.getElementById('deliveryFee').parentElement;
+  if(deliveryRow) deliveryRow.style.display = 'none';
+
+  document.getElementById('total').textContent = tot + ' جنيه';
+  
+  const badge = document.getElementById('offerBadge');
+  if(badge) badge.classList.toggle('show', qty >= S.discountQtyThreshold);
 }
+
 function changeQty(d) {
   qty = Math.max(1, Math.min(99, qty + d));
   document.getElementById('qtyDisplay').textContent = qty;
@@ -121,8 +115,7 @@ function submitOrder() {
   const addr = document.getElementById('custAddress').value.trim();
   const notes = document.getElementById('custNotes').value.trim();
   const up = getUnitPrice();
-  const del = getDelivery();
-  const tot = up * qty + del;
+  const tot = up * qty;
 
   $.ajax({
       url: '/order',
@@ -137,7 +130,7 @@ function submitOrder() {
           total_price: tot
       },
       success: function(response) {
-          const msg = `🥙 *طلب جديد — لقمة حواوشي*\n\n👤 الاسم: ${name}\n📱 الهاتف: ${phone}\n📍 المنطقة: ${area}\n🏠 العنوان: ${addr}\n📦 الكمية: ${qty} قطعة\n💰 السعر: ${up} جنيه / قطعة\n🚚 التوصيل: ${del} جنيه\n💵 *الإجمالي: ${tot} جنيه*${notes ? '\n📝 ملاحظات: ' + notes : ''}\n\n⏰ ${new Date().toLocaleString('ar-EG')}`;
+          const msg = `🥙 *طلب جديد — لقمة حواوشي*\n\n👤 الاسم: ${name}\n📱 الهاتف: ${phone}\n📍 المنطقة: ${area}\n🏠 العنوان: ${addr}\n📦 الكمية: ${qty} قطعة\n💰 السعر: ${up} جنيه / قطعة\n💵 *الإجمالي: ${tot} جنيه*${notes ? '\n📝 ملاحظات: ' + notes : ''}\n\n⏰ ${new Date().toLocaleString('ar-EG')}`;
           const waUrl = `https://wa.me/${S.whatsappNumber}?text=${encodeURIComponent(msg)}`;
           
           Swal.fire({
@@ -154,14 +147,19 @@ function submitOrder() {
       error: function(xhr) {
           submitBtn.disabled = false;
           submitBtn.innerHTML = '<span>📲</span> أرسل طلبك على واتساب';
-          let errorMsg = 'حدث خطأ ما، يرجى المحاولة لاحقاً.';
+          
+          // إظهار الخطأ الحقيقي للمساعدة في التشخيص
+          let errorMsg = 'حدث خطأ في السيرفر (500). تأكد من إعدادات قاعدة البيانات والصلاحيات.';
           if (xhr.status === 422) {
               const errors = xhr.responseJSON.errors;
               errorMsg = Object.values(errors).flat().join('<br>');
+          } else if (xhr.responseJSON && xhr.responseJSON.message) {
+              errorMsg = xhr.responseJSON.message;
           }
+
           Swal.fire({
               icon: 'error',
-              title: 'خطأ!',
+              title: 'عذراً!',
               html: errorMsg,
           });
       }
@@ -253,7 +251,6 @@ document.addEventListener('DOMContentLoaded', () => {
   renderReviews();
   renderFAQ();
   
-  // Intersection Observer for animations
   const observer = new IntersectionObserver(entries => {
     entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
   }, { threshold: 0.1 });
@@ -261,7 +258,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.addEventListener('scroll', updateFloatBtn);
 
-  // Close modals on overlay click
   document.querySelectorAll('.modal-overlay').forEach(el => {
     el.addEventListener('click', e => { if (e.target === el) el.classList.remove('show'); });
   });

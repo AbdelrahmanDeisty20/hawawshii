@@ -151,15 +151,18 @@
     </div>
     <div class="form-group">
       <label for="areaSelect">المنطقة *</label>
-      <select id="areaSelect" onchange="handleAreaChange()">
+      <select id="areaSelect">
         <option value="">— اختر منطقتك —</option>
-        <option value="outside" data-outside="true">خارج المنصورة</option>
-        <optgroup label="مناطق المنصورة" id="areasGroup">
-          <!-- Populated by JS -->
-        </optgroup>
+        <option value="حي الجامعة">حي الجامعة</option>
+        <option value="جيهان">جيهان</option>
+        <option value="أحمد ماهر">أحمد ماهر</option>
+        <option value="المشاية السفلية">المشاية السفلية</option>
+        <option value="توريل">توريل</option>
+        <option value="outside">خارج المنصورة</option>
       </select>
       <div class="error-msg" id="areaErr">اختر منطقة من القائمة</div>
     </div>
+
     <!-- Outside area note -->
     <div class="outside-area-note" id="outsideNote">
       <strong>😊 شكرًا لاهتمامك!</strong><br>
@@ -230,5 +233,7 @@
     <button onclick="closeModal('zoneModal')" style="background:none;color:var(--text-light);font-size:14px;padding:8px">إغلاق</button>
   </div>
 </div>
+
+@include('partials.order-scripts')
 
 @endsection

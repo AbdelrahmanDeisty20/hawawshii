@@ -7,16 +7,50 @@ $(document).ready(function() {
         }
     });
 
-    // دالة تحديث الحسابات (مبنية على السعر 30)
+    // إعدادات الأسعار الأصلية
+    const S = {
+        unitPrice: 55,
+        discountedPrice: 45,
+        discountQtyThreshold: 5
+    };
+
+    // دالة تحديث الحسابات
     function refreshCalculations() {
-        const up = 30;
         const currentQty = parseInt($('#qtyDisplay').text());
-        const total = up * currentQty;
         
+        // حساب سعر القطعة بناء على الكمية (خصم للكميات)
+        const up = currentQty >= S.discountQtyThreshold ? S.discountedPrice : S.unitPrice;
+        
+        // جلب سعر التوصيل من المنطقة المختارة
+        const selectedArea = $('#areaSelect option:selected');
+        const deliveryFee = parseInt(selectedArea.data('delivery')) || 0;
+        
+        const subtotal = up * currentQty;
+        const total = subtotal + deliveryFee;
+        
+        // تحديث الواجهة
         $('#unitPrice').text(up + ' جنيه');
         $('#pqty').text(currentQty);
-        $('#subtotal').text(total + ' جنيه');
+        $('#subtotal').text(subtotal + ' جنيه');
+        
+        const deliveryRow = $('#deliveryFee').parent();
+        if (deliveryFee > 0) {
+            $('#deliveryFee').text(deliveryFee + ' جنيه');
+            deliveryRow.show();
+        } else {
+            $('#deliveryFee').text('—');
+            // لا نخفي السطر هنا عشان اليوزر يشوف كلمة "توصيل"
+            deliveryRow.show(); 
+        }
+
         $('#total').text(total + ' جنيه');
+        
+        // إظهار شارة العرض لو انطبق الخصم
+        if (currentQty >= S.discountQtyThreshold) {
+            $('#offerBadge').addClass('show');
+        } else {
+            $('#offerBadge').removeClass('show');
+        }
     }
 
     // أزرار الكمية
@@ -40,13 +74,14 @@ $(document).ready(function() {
         $('#outsideNote').toggleClass('show', isOutside);
         $('#addressGroup').toggle(!isOutside);
         $('#submitBtn').toggle(!isOutside);
+        refreshCalculations();
     });
 
     // تنفيذ طلب الأوردر عبر AJAX
     $('#submitBtn').on('click', function(e) {
         e.preventDefault();
 
-        // Validation يدوي سريع بـ jQuery
+        // Validation
         let isValid = true;
         $('.error-msg').hide();
 
@@ -64,14 +99,19 @@ $(document).ready(function() {
         const originalText = btn.html();
         btn.prop('disabled', true).html('<span class="spinner">⌛</span> جاري الطلب...');
 
+        const currentQty = parseInt($('#qtyDisplay').text());
+        const up = currentQty >= S.discountQtyThreshold ? S.discountedPrice : S.unitPrice;
+        const deliveryFee = parseInt($('#areaSelect option:selected').data('delivery')) || 0;
+        const total = (up * currentQty) + deliveryFee;
+
         const formData = {
             name: $('#custName').val().trim(),
             phone: $('#custPhone').val().trim(),
             area: $('#areaSelect').val(),
             address: $('#custAddress').val().trim(),
             notes: $('#custNotes').val().trim(),
-            quantity: parseInt($('#qtyDisplay').text()),
-            total_price: 30 * parseInt($('#qtyDisplay').text())
+            quantity: currentQty,
+            total_price: total
         };
 
         $.ajax({
@@ -80,7 +120,7 @@ $(document).ready(function() {
             data: formData,
             success: function(response) {
                 const waNumber = '201010455010';
-                const msg = `🥙 *طلب جديد — لقمة حواوشي*\n\n👤 الاسم: ${formData.name}\n📱 الهاتف: ${formData.phone}\n📍 المنطقة: ${formData.area}\n🏠 العنوان: ${formData.address}\n📦 الكمية: ${formData.quantity} قطعة\n💵 *الإجمالي: ${formData.total_price} جنيه*${formData.notes ? '\n📝 ملاحظات: ' + formData.notes : ''}`;
+                const msg = `🥙 *طلب جديد — لقمة حواوشي*\n\n👤 الاسم: ${formData.name}\n📱 الهاتف: ${formData.phone}\n📍 المنطقة: ${formData.area}\n🏠 العنوان: ${formData.address}\n📦 الكمية: ${formData.quantity} قطعة\n💰 السعر: ${up} جنيه / قطعة\n🚚 التوصيل: ${deliveryFee} جنيه\n💵 *الإجمالي: ${total} جنيه*${formData.notes ? '\n📝 ملاحظات: ' + formData.notes : ''}`;
                 const waUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`;
                 
                 Swal.fire({
@@ -88,18 +128,16 @@ $(document).ready(function() {
                     title: 'تم تسجيل طلبك بنجاح! 🎉',
                     text: 'اضغط تمام عشان نبعت طلبك على الواتساب دلوقتي.',
                     confirmButtonText: 'تمام، ابعتني للواتساب',
-                    confirmButtonColor: '#25D366', // لون أخضر واتساب
+                    confirmButtonColor: '#25D366',
                     timer: 4000,
                     timerProgressBar: true,
-                }).then((result) => {
-                    // التوجيه للواتساب بعد الضغط على الزرار أو انتهاء الوقت
+                }).then(() => {
                     window.location.href = waUrl;
                 });
-
             },
             error: function(xhr) {
                 btn.prop('disabled', false).html(originalText);
-                let errorMsg = 'عذراً، حدث خطأ أثناء إرسال الطلب.';
+                let errorMsg = 'عذراً، حدث خطأ أثناء إرسال الطلب. تأكد من اتصال قاعدة البيانات.';
                 if (xhr.status === 422) {
                     errorMsg = Object.values(xhr.responseJSON.errors).flat().join('<br>');
                 }
@@ -112,19 +150,16 @@ $(document).ready(function() {
     refreshCalculations();
 });
 
-// دالة تسجيل المنطقة (خارج المنصورة)
 function submitZoneRegistration() {
     const data = {
         name: $('#zoneName').val().trim(),
         phone: $('#zonePhone').val().trim(),
         area: $('#zoneArea').val().trim()
     };
-    
     if (!data.name || !data.phone || !data.area) {
         Swal.fire({ icon: 'warning', text: 'من فضلك اكمل بياناتك' });
         return;
     }
-
     $.ajax({
         url: "{{ route('zone.store') }}",
         method: 'POST',

@@ -34,10 +34,16 @@ $(document).ready(function() {
         $('#subtotal').text(subtotal + ' جنيه');
         
         const deliveryRow = $('#deliveryFee').parent();
-        // إخفاء سطر التوصيل من الفاتورة بناء على طلبك
-        deliveryRow.hide(); 
+        // إظهار سطر التوصيل مرة ثانية بناء على طلبك
+        if (deliveryFee > 0) {
+            $('#deliveryFee').text(deliveryFee + ' جنيه');
+            deliveryRow.show();
+        } else {
+            deliveryRow.hide();
+        }
 
         $('#total').text(total + ' جنيه');
+
 
         
         // إظهار شارة العرض لو انطبق الخصم

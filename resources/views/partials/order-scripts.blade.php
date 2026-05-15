@@ -128,12 +128,14 @@ $(document).ready(function() {
                     icon: 'success',
                     title: 'تم تسجيل طلبك بنجاح! 🎉',
                     text: 'اضغط تمام عشان نبعت طلبك على الواتساب دلوقتي.',
-                    confirmButtonText: 'تمام، ابعتني للواتساب',
+                    confirmButtonText: 'تمام، ابعتني للواتساب 💬',
                     confirmButtonColor: '#25D366',
-                    timer: 4000,
-                    timerProgressBar: true,
-                }).then(() => {
-                    window.location.href = waUrl;
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = waUrl;
+                    }
                 });
             },
             error: function(xhr) {

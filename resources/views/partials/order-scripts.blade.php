@@ -125,17 +125,26 @@ $(document).ready(function() {
                 const msg = `🥙 *طلب جديد — لقمة حواوشي*\n\n👤 الاسم: ${formData.name}\n📱 الهاتف: ${formData.phone}\n📍 المنطقة: ${formData.area}\n🏠 العنوان: ${formData.address}\n📦 الكمية: ${formData.quantity} قطعة\n💰 السعر: ${up} جنيه / قطعة\n🚚 التوصيل: ${deliveryFee} جنيه\n💵 *الإجمالي: ${total} جنيه*${formData.notes ? '\n📝 ملاحظات: ' + formData.notes : ''}`;
                 const waUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`;
                 
+                // إعادة الزرار لوضعه الطبيعي
+                btn.prop('disabled', false).html(originalText);
+
                 Swal.fire({
                     icon: 'success',
-                    title: 'تم تسجيل طلبك بنجاح! 🎉',
-                    text: 'اضغط تمام عشان نبعت طلبك على الواتساب دلوقتي.',
-                    confirmButtonText: 'تمام، ابعتني للواتساب 💬',
+                    title: '<span style="color: #2D5A27">تم تسجيل طلبك بنجاح! 🎉</span>',
+                    html: `<b>شكراً لثقتك في لقمة حواوشي!</b><br><br>اضغط على الزرار تحت عشان نبعت تفاصيل طلبك للمطعم على الواتساب دلوقتي.`,
+                    confirmButtonText: 'إرسال الطلب عبر واتساب 📲',
                     confirmButtonColor: '#25D366',
+                    cancelButtonText: 'إغلاق',
+                    showCancelButton: true,
+                    cancelButtonColor: '#d33',
                     allowOutsideClick: false,
                     allowEscapeKey: false,
+                    customClass: {
+                        popup: 'swal-mobile-wide'
+                    }
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        window.location.href = waUrl;
+                        window.open(waUrl, '_blank'); // فتح في صفحة جديدة أفضل للموبايل
                     }
                 });
             },

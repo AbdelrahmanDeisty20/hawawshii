@@ -152,16 +152,44 @@ tr:hover td { background: rgba(245,230,200,0.3); }
   box-shadow: 0 4px 14px rgba(232,98,26,0.3);
 }
 
-@media (max-width: 768px) {
-  .sidebar { transform: translateX(100%); }
-  .main-content { margin-right: 0; padding: 16px; }
-}
+    .admin-header {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 15px 25px; background: white; border-bottom: 1px solid var(--border);
+        position: sticky; top: 0; z-index: 100;
+    }
+    .menu-toggle {
+        display: none; background: var(--orange); color: white; border: none;
+        width: 40px; height: 40px; border-radius: 8px; font-size: 20px; cursor: pointer;
+    }
+
+    .sidebar-logo {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 20px 15px; font-weight: 800; font-size: 18px; border-bottom: 1px solid #333;
+    }
+    .close-sidebar {
+        display: none; background: none; border: none; color: #888; font-size: 24px; cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+      .close-sidebar { display: block; }
+      .menu-toggle { display: block; }
+      .sidebar { 
+          position: fixed; right: -280px; top: 0; bottom: 0; 
+          z-index: 1000; transition: 0.3s; 
+          box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+      }
+      .sidebar.open { right: 0; }
+      .main-content { margin-right: 0; width: 100%; }
+    }
 </style>
 </head>
 <body>
 <div class="admin-layout">
-  <div class="sidebar">
-    <div class="sidebar-logo">🥙 لقمة <span>حواوشي</span></div>
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+        <span>🥙 لقمة حواوشي</span>
+        <button class="close-sidebar" onclick="toggleSidebar()">✕</button>
+    </div>
     <a href="{{ route('admin.dashboard') }}" class="nav-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">📊 الرئيسية</a>
     <a href="{{ route('admin.orders') }}" class="nav-item {{ request()->routeIs('admin.orders') ? 'active' : '' }}">📦 الطلبات</a>
     <div style="margin: 10px 15px; color: #888; font-size: 12px; border-bottom: 1px solid #333; padding-bottom: 5px;">إدارة المحتوى</div>
@@ -179,12 +207,24 @@ tr:hover td { background: rgba(245,230,200,0.3); }
   </div>
 
   <div class="main-content">
-    <div class="topbar">
-      <div class="page-title">@yield('page_title')</div>
+  <div class="admin-header">
+    <div style="display: flex; align-items: center; gap: 15px;">
+        <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+        <div class="page-title">@yield('page_title', 'لوحة التحكم')</div>
     </div>
+    <a href="{{ route('admin.logout') }}" style="color: var(--red); text-decoration: none; font-weight: bold; font-size: 14px;">🚪 خروج</a>
+  </div>
+
+  <div class="content-body">
     @yield('content')
   </div>
 </div>
+
+<script>
+    function toggleSidebar() {
+        document.getElementById('sidebar').classList.toggle('open');
+    }
+</script>
 
 <script>
 $.ajaxSetup({

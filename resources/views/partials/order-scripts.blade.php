@@ -130,21 +130,15 @@ $(document).ready(function() {
 
                 Swal.fire({
                     icon: 'success',
-                    title: '<span style="color: #2D5A27">تم تسجيل طلبك بنجاح! 🎉</span>',
-                    html: `<b>شكراً لثقتك في لقمة حواوشي!</b><br><br>اضغط على الزرار تحت عشان نبعت تفاصيل طلبك للمطعم على الواتساب دلوقتي.`,
-                    confirmButtonText: 'إرسال الطلب عبر واتساب 📲',
+                    title: 'تم تسجيل طلبك بنجاح! 🎉',
+                    text: 'اضغط على الزرار تحت عشان تبعت طلبك على الواتساب دلوقتي.',
+                    confirmButtonText: 'تمام، إرسال للواتساب ✅',
                     confirmButtonColor: '#25D366',
-                    cancelButtonText: 'إغلاق',
-                    showCancelButton: true,
-                    cancelButtonColor: '#d33',
                     allowOutsideClick: false,
                     allowEscapeKey: false,
-                    customClass: {
-                        popup: 'swal-mobile-wide'
-                    }
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        window.open(waUrl, '_blank'); // فتح في صفحة جديدة أفضل للموبايل
+                        window.location.href = waUrl;
                     }
                 });
             },

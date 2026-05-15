@@ -100,9 +100,9 @@
     <div class="qty-section">
       <div class="qty-label">الكمية:</div>
       <div class="qty-control">
-        <button class="qty-btn minus" onclick="changeQty(-1)" aria-label="تقليل">−</button>
+        <button class="qty-btn minus" aria-label="تقليل">−</button>
         <div class="qty-num" id="qtyDisplay">1</div>
-        <button class="qty-btn plus" onclick="changeQty(1)" aria-label="زيادة">+</button>
+        <button class="qty-btn plus" aria-label="زيادة">+</button>
       </div>
       <div class="offer-badge" id="offerBadge">🎉 عرض خاص! طلبت 5 قطع أو أكثر — السعر المخفض شغّال!</div>
     </div>

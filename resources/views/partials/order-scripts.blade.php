@@ -56,13 +56,13 @@ $(document).ready(function() {
     }
 
     // أزرار الكمية
-    $('.qty-btn.plus').on('click', function() {
+    $('.qty-btn.plus').off('click').on('click', function() {
         let val = parseInt($('#qtyDisplay').text());
         $('#qtyDisplay').text(val + 1);
         refreshCalculations();
     });
 
-    $('.qty-btn.minus').on('click', function() {
+    $('.qty-btn.minus').off('click').on('click', function() {
         let val = parseInt($('#qtyDisplay').text());
         if (val > 1) {
             $('#qtyDisplay').text(val - 1);

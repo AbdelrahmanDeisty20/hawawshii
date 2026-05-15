@@ -104,6 +104,18 @@ button { cursor: pointer; border: none; font-family: inherit; }
   padding: 24px; box-shadow: var(--shadow); border: 1px solid var(--border);
   margin-bottom: 24px;
 }
+.form-group { margin-bottom: 20px; display: flex; flex-direction: column; gap: 8px; }
+.form-group label { font-weight: bold; color: var(--text); font-size: 14px; }
+.form-group input, .form-group textarea, .form-group select { 
+    width: 100%; 
+    padding: 12px; 
+    border: 1px solid var(--border); 
+    border-radius: 8px; 
+    font-family: inherit;
+    background: #fdfdfd;
+    transition: 0.3s;
+}
+.form-group input:focus { border-color: var(--orange); outline: none; box-shadow: 0 0 0 3px rgba(255, 122, 0, 0.1); }
 .card-header {
   display: flex; align-items: center; justify-content: space-between;
   margin-bottom: 20px; padding-bottom: 14px;
@@ -152,6 +164,14 @@ tr:hover td { background: rgba(245,230,200,0.3); }
     <div class="sidebar-logo">🥙 لقمة <span>حواوشي</span></div>
     <a href="{{ route('admin.dashboard') }}" class="nav-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">📊 الرئيسية</a>
     <a href="{{ route('admin.orders') }}" class="nav-item {{ request()->routeIs('admin.orders') ? 'active' : '' }}">📦 الطلبات</a>
+    <div style="margin: 10px 15px; color: #888; font-size: 12px; border-bottom: 1px solid #333; padding-bottom: 5px;">إدارة المحتوى</div>
+    <a href="{{ route('admin.settings') }}" class="nav-item {{ request()->routeIs('admin.settings') ? 'active' : '' }}">💰 الأسعار والواتساب</a>
+    <a href="{{ route('admin.features') }}" class="nav-item {{ request()->routeIs('admin.features') ? 'active' : '' }}">✨ المميزات</a>
+    <a href="{{ route('admin.areas') }}" class="nav-item {{ request()->routeIs('admin.areas') ? 'active' : '' }}">📍 مناطق التوصيل</a>
+    <a href="{{ route('admin.steps') }}" class="nav-item {{ request()->routeIs('admin.steps') ? 'active' : '' }}">👨‍🍳 خطوات التحضير</a>
+    <a href="{{ route('admin.reviews') }}" class="nav-item {{ request()->routeIs('admin.reviews') ? 'active' : '' }}">⭐ التقييمات</a>
+    <a href="{{ route('admin.faqs') }}" class="nav-item {{ request()->routeIs('admin.faqs') ? 'active' : '' }}">❓ الأسئلة الشائعة</a>
+    <a href="{{ route('admin.pixels') }}" class="nav-item {{ request()->routeIs('admin.pixels') ? 'active' : '' }}">📡 التتبع (Pixel)</a>
     
     <div class="sidebar-logout">
       <a href="{{ route('admin.logout') }}" class="logout-btn">🚪 خروج</a>

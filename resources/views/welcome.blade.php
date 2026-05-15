@@ -13,18 +13,18 @@
 
 <!-- DELIVERY BANNER -->
 <div class="delivery-banner">
-  <span>🚚 متاح حاليًا داخل المنصورة فقط — وقريبًا هنفتح فروع في مناطق جديدة إن شاء الله ✨</span>
+  <span>{{ $settings['delivery_note'] ?? '🚚 متاح حاليًا داخل المنصورة فقط' }}</span>
 </div>
 
 <!-- HERO -->
 <section class="hero" id="home">
   <div class="hero-content">
-    <div class="hero-badge">🔥 الأكثر طلبًا في المنصورة</div>
+    <div class="hero-badge">{{ $settings['hero_badge'] ?? '🔥 الأكثر طلبًا' }}</div>
     <div class="hero-image-wrap">
       <span class="hero-emoji">🥙</span>
     </div>
-    <h1>لقمة <span class="accent">حواوشي</span><br>الطعم البلدي الحقيقي</h1>
-    <p class="hero-desc">حواوشي جاهز على التسوية — اعمله في الفرن أو الطاسة أو الشواية في دقائق وهتحس إنك في المطعم!</p>
+    <h1>{!! $settings['hero_title'] ?? 'لقمة <span class="accent">حواوشي</span><br>الطعم البلدي الحقيقي' !!}</h1>
+    <p class="hero-desc">{{ $settings['hero_desc'] ?? 'حواوشي جاهز على التسوية' }}</p>
     <div class="hero-tags">
       <span class="hero-tag">🥩 لحمة بلدي 100%</span>
       <span class="hero-tag">⚡ جاهز للتسوية</span>
@@ -40,30 +40,18 @@
   <div class="divider"></div>
   <p class="section-subtitle fade-up">كل حاجة فيه بتخليك تطلبه تاني مرة</p>
   <div class="features-grid">
+    @foreach($features as $feature)
     <div class="feature-card fade-up">
-      <div class="feature-icon">🥩</div>
-      <div class="feature-title">لحمة بلدي 100%</div>
+      <div class="feature-icon">
+          @if($feature->image)
+            <img src="{{ asset('storage/' . $feature->image) }}" style="width: 40px; height: 40px; object-fit: contain;">
+          @else
+            {{ $feature->icon }}
+          @endif
+      </div>
+      <div class="feature-title">{{ $feature->title }}</div>
     </div>
-    <div class="feature-card fade-up">
-      <div class="feature-icon">🏆</div>
-      <div class="feature-title">محفوظ بأعلى جودة</div>
-    </div>
-    <div class="feature-card fade-up">
-      <div class="feature-icon">⚡</div>
-      <div class="feature-title">جاهز في دقائق</div>
-    </div>
-    <div class="feature-card fade-up">
-      <div class="feature-icon">🔥</div>
-      <div class="feature-title">فرن / طاسة / شواية</div>
-    </div>
-    <div class="feature-card fade-up">
-      <div class="feature-icon">🎉</div>
-      <div class="feature-title">مناسب للعزومات</div>
-    </div>
-    <div class="feature-card fade-up">
-      <div class="feature-icon">🌿</div>
-      <div class="feature-title">مثالي للسحور</div>
-    </div>
+    @endforeach
   </div>
 </section>
 
@@ -73,30 +61,22 @@
   <div class="divider"></div>
   <p class="section-subtitle fade-up">أسهل من ما تتخيل!</p>
   <div class="steps">
+    @foreach($steps as $index => $step)
     <div class="step fade-up">
-      <div class="step-num">١</div>
+      <div class="step-num">{{ $index + 1 }}</div>
       <div class="step-content">
-        <h3>افتح الكيس</h3>
-        <p>الحواوشي جاهز ومحضّر بالتوابل البلدي الأصيلة</p>
+        <h3>{{ $step->title }}</h3>
+        <p>{{ $step->description }}</p>
       </div>
-      <div class="step-emoji">📦</div>
-    </div>
-    <div class="step fade-up">
-      <div class="step-num">٢</div>
-      <div class="step-content">
-        <h3>سخّن زي ما تحب</h3>
-        <p>فرن 15 دقيقة — أو طاسة 8 دقايق — أو شواية لطعم مميز</p>
+      <div class="step-emoji">
+          @if($step->image)
+            <img src="{{ asset('storage/' . $step->image) }}" style="width: 40px; height: 40px; object-fit: contain;">
+          @else
+            {{ $step->icon }}
+          @endif
       </div>
-      <div class="step-emoji">🔥</div>
     </div>
-    <div class="step fade-up">
-      <div class="step-num">٣</div>
-      <div class="step-content">
-        <h3>استمتع بالطعم</h3>
-        <p>الطعم البلدي الحقيقي في بيتك من غير تعب!</p>
-      </div>
-      <div class="step-emoji">😋</div>
-    </div>
+    @endforeach
   </div>
 </section>
 
@@ -153,11 +133,9 @@
       <label for="areaSelect">المنطقة *</label>
       <select id="areaSelect">
         <option value="">— اختر منطقتك —</option>
-        <option value="حي الجامعة" data-delivery="30">حي الجامعة</option>
-        <option value="جيهان" data-delivery="30">جيهان</option>
-        <option value="أحمد ماهر" data-delivery="30">أحمد ماهر</option>
-        <option value="المشاية السفلية" data-delivery="30">المشاية السفلية</option>
-        <option value="توريل" data-delivery="30">توريل</option>
+        @foreach($areas as $area)
+          <option value="{{ $area->name }}" data-delivery="{{ $area->delivery_fee }}">{{ $area->name }}</option>
+        @endforeach
         <option value="outside">خارج المنصورة</option>
       </select>
       <div class="error-msg" id="areaErr">اختر منطقة من القائمة</div>
@@ -193,7 +171,25 @@
   <div class="divider"></div>
   <p class="section-subtitle fade-up">ناس زيك جربوا وبقوا عملاء دايمين 😍</p>
   <div class="reviews-grid" id="reviewsGrid">
-    <!-- Populated by JS -->
+    @foreach($reviews as $review)
+    <div class="review-card fade-up">
+        <div class="review-header">
+            @if($review->image)
+                <img src="{{ asset('storage/' . $review->image) }}" class="review-img">
+            @else
+                <div class="review-avatar">👤</div>
+            @endif
+            <div>
+                <div class="review-name">{{ $review->name }}</div>
+                <div class="review-location">{{ $review->location }}</div>
+            </div>
+        </div>
+        <div class="review-stars">
+            @for($i=0; $i<$review->rating; $i++) ⭐ @endfor
+        </div>
+        <p class="review-text">"{{ $review->comment }}"</p>
+    </div>
+    @endforeach
   </div>
 </section>
 
@@ -201,17 +197,25 @@
 <section class="faq section" id="faq">
   <h2 class="section-title fade-up">أسئلة شائعة</h2>
   <div class="divider"></div>
-  <div class="faq-list" id="faqList">
-    <!-- Populated by JS -->
+  <div class="faq-list">
+    @foreach($faqs as $faq)
+    <div class="faq-item fade-up">
+      <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+        <span>{{ $faq->question }}</span>
+        <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-a">{{ $faq->answer }}</div>
+    </div>
+    @endforeach
   </div>
 </section>
 
 <!-- FOOTER -->
 <footer>
   <div class="footer-logo">🥙 لقمة حواوشي</div>
-  <div>الطعم البلدي الحقيقي — لحمة بلدي 100%</div>
+  <div>{{ $settings['footer_text'] ?? 'الطعم البلدي الحقيقي — لحمة بلدي 100%' }}</div>
   <div>📍 متاح حاليًا داخل المنصورة</div>
-  <div class="footer-note">© 2024 لقمة حواوشي — جميع الحقوق محفوظة</div>
+  <div class="footer-note">© {{ date('Y') }} لقمة حواوشي — جميع الحقوق محفوظة</div>
 </footer>
 
 <!-- Float CTA -->

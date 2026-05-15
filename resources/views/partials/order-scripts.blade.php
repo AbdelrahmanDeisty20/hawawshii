@@ -8,10 +8,11 @@ $(document).ready(function() {
     });
 
     // إعدادات الأسعار الأصلية
+    // إعدادات الأسعار الديناميكية
     const S = {
-        unitPrice: 55,
-        discountedPrice: 45,
-        discountQtyThreshold: 5
+        unitPrice: {{ $settings['unit_price'] ?? 55 }},
+        discountedPrice: {{ $settings['discounted_price'] ?? 45 }},
+        discountQtyThreshold: {{ $settings['discount_threshold'] ?? 5 }}
     };
 
     // دالة تحديث الحسابات
@@ -120,7 +121,7 @@ $(document).ready(function() {
             method: 'POST',
             data: formData,
             success: function(response) {
-                const waNumber = '201010455010';
+                const waNumber = '{{ $settings['whatsapp_number'] ?? '201010455010' }}';
                 const msg = `🥙 *طلب جديد — لقمة حواوشي*\n\n👤 الاسم: ${formData.name}\n📱 الهاتف: ${formData.phone}\n📍 المنطقة: ${formData.area}\n🏠 العنوان: ${formData.address}\n📦 الكمية: ${formData.quantity} قطعة\n💰 السعر: ${up} جنيه / قطعة\n🚚 التوصيل: ${deliveryFee} جنيه\n💵 *الإجمالي: ${total} جنيه*${formData.notes ? '\n📝 ملاحظات: ' + formData.notes : ''}`;
                 const waUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`;
                 

@@ -63,7 +63,7 @@ body { font-family: 'Cairo', sans-serif; direction: rtl; }
       @csrf
       <div class="login-field">
         <label for="username">اسم المستخدم</label>
-        <input type="text" id="username" name="username" placeholder="admin" autocomplete="username" required value="{{ old('username') }}">
+        <input type="text" id="username" name="username" placeholder="مثال: admin" autocomplete="username" required value="{{ old('username') }}">
       </div>
       <div class="login-field">
         <label for="password">كلمة المرور</label>

@@ -130,10 +130,10 @@ $(document).ready(function() {
 
                 Swal.fire({
                     icon: 'success',
-                    title: 'تم تسجيل طلبك بنجاح! 🎉',
-                    text: 'اضغط على الزرار تحت عشان تبعت طلبك على الواتساب دلوقتي.',
-                    confirmButtonText: 'تمام، إرسال للواتساب ✅',
-                    confirmButtonColor: '#25D366',
+                    title: 'تم استلام طلبك!',
+                    text: 'تم استلام طلبك بنجاح! جاري تحويلك لواتساب...',
+                    confirmButtonText: 'حسناً',
+                    confirmButtonColor: '#7066e0',
                     allowOutsideClick: false,
                     allowEscapeKey: false,
                 }).then((result) => {
